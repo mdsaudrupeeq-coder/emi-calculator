@@ -1,27 +1,186 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>EMI Calculator</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Pro EMI Calculator</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+    body {
+      margin:0;
+      font-family: Arial;
+      background:#0b1d3a;
+      color:white;
+      display:flex;
+      justify-content:center;
+      padding:20px;
+    }
+
+    .app {
+      width:350px;
+      background:#12264d;
+      border-radius:20px;
+      padding:20px;
+    }
+
+    h2 {margin:10px 0;}
+
+    .btns button {
+      margin:5px;
+      padding:8px 12px;
+      border:none;
+      border-radius:20px;
+      background:#1e3c72;
+      color:white;
+      cursor:pointer;
+    }
+
+    .box {
+      background:#1e3c72;
+      padding:15px;
+      border-radius:12px;
+      margin-top:10px;
+    }
+
+    input {
+      width:100%;
+    }
+
+    .result {
+      margin-top:15px;
+      font-size:18px;
+      font-weight:bold;
+      text-align:center;
+    }
+
+    canvas {
+      margin-top:20px;
+    }
+
+    table {
+      width:100%;
+      font-size:12px;
+      margin-top:10px;
+    }
+
+    td {padding:4px;}
+    
+    button.pdf {
+      width:100%;
+      margin-top:10px;
+      padding:10px;
+      border:none;
+      background:#ff7e5f;
+      color:white;
+      border-radius:10px;
+    }
+
+  </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="app">
 
-  <h2>💼 EMI Calculator</h2>
+<h2>💼 EMI Calculator</h2>
 
-  <input type="number" id="amount" placeholder="Loan Amount (₹)">
-  <input type="number" id="rate" placeholder="Interest Rate (%)">
-  <input type="number" id="tenure" placeholder="Tenure (Months)">
+<div class="btns">
+  <button>Home</button>
+  <button>Personal</button>
+  <button>Car</button>
+  <button>Education</button>
+</div>
 
-  <button onclick="calculateEMI()">Calculate</button>
+<div class="box">
 
-  <div class="result" id="result"></div>
+<label>Loan Amount</label>
+<input type="range" id="amount" min="10000" max="1000000" value="500000">
+
+<label>Interest Rate</label>
+<input type="range" id="rate" min="5" max="25" value="13">
+
+<label>Tenure (Months)</label>
+<input type="range" id="tenure" min="12" max="84" value="36">
 
 </div>
 
-<script src="app.js"></script>
+<div class="result" id="result"></div>
+
+<canvas id="chart"></canvas>
+
+<button class="pdf" onclick="downloadPDF()">Download PDF</button>
+
+<table id="table"></table>
+
+</div>
+
+<script>
+
+let chart;
+
+function calculate(){
+
+let P = amount.value;
+let R = rate.value/12/100;
+let N = tenure.value;
+
+let EMI = (P*R*Math.pow(1+R,N))/(Math.pow(1+R,N)-1);
+let total = EMI*N;
+let interest = total - P;
+
+result.innerHTML = "EMI: ₹"+EMI.toFixed(0);
+
+// chart
+if(chart) chart.destroy();
+chart = new Chart(document.getElementById("chart"), {
+  type:'doughnut',
+  data:{
+    labels:["Principal","Interest"],
+    datasets:[{
+      data:[P,interest],
+      backgroundColor:["#4CAF50","#FF5733"]
+    }]
+  }
+});
+
+// table
+let html="";
+let balance=P;
+
+for(let i=1;i<=N;i++){
+ let interestPart = balance*R;
+ let principalPart = EMI - interestPart;
+ balance -= principalPart;
+
+ html += `<tr>
+ <td>${i}</td>
+ <td>${EMI.toFixed(0)}</td>
+ <td>${principalPart.toFixed(0)}</td>
+ <td>${interestPart.toFixed(0)}</td>
+ </tr>`;
+}
+
+table.innerHTML = html;
+
+}
+
+document.querySelectorAll("input").forEach(i=>i.oninput=calculate);
+
+calculate();
+
+
+// PDF
+function downloadPDF(){
+const { jsPDF } = window.jspdf;
+let doc = new jsPDF();
+
+doc.text("EMI Report",20,20);
+doc.text(result.innerText,20,30);
+
+doc.save("emi.pdf");
+}
+
+</script>
 
 </body>
 </html>
