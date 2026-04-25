@@ -3,6 +3,9 @@
 <head>
 <title>RupeeRoot EMI Calculator</title>
 
+<!-- ✅ FAVICON (same logo) -->
+<link rel="icon" type="image/png" href="logo.png">
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
@@ -248,7 +251,6 @@ img.onload = function(){
 doc.setFillColor(37,99,235);
 doc.rect(0,0,210,25,"F");
 
-// PERFECT LOGO SIZE
 doc.addImage(img,'PNG',10,5,15,15);
 
 doc.setTextColor(255,255,255);
@@ -259,9 +261,6 @@ doc.setFontSize(10);
 doc.text("Your Trusted Loan Partner",35,20);
 
 doc.setTextColor(0,0,0);
-
-// REMOVE EXTRA SPACING ISSUE
-doc.setFont("helvetica","normal");
 
 doc.rect(10,35,190,40);
 
