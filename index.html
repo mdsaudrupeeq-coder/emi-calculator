@@ -21,8 +21,8 @@ body{
 }
 
 .logo{
-  width:45px;
-  height:45px;
+  width:50px;
+  height:50px;
   object-fit:contain;
   margin-right:12px;
 }
@@ -180,12 +180,10 @@ let EMI = (P*R*Math.pow(1+R,N))/(Math.pow(1+R,N)-1);
 let totalPaymentVal = EMI*N;
 let totalInterestVal = totalPaymentVal-P;
 
-// ✅ FIXED OUTPUT
 document.getElementById("emi").innerHTML = "Rs. " + EMI.toFixed(0);
 document.getElementById("totalPayment").innerHTML = "Rs. " + totalPaymentVal.toFixed(0);
 document.getElementById("totalInterest").innerHTML = "Rs. " + totalInterestVal.toFixed(0);
 
-// CHART
 if(chart) chart.destroy();
 
 chart = new Chart(document.getElementById("chart"), {
@@ -199,7 +197,6 @@ chart = new Chart(document.getElementById("chart"), {
   }
 });
 
-// TABLE
 let html = "<tr><th>Month</th><th>EMI</th><th>Principal</th><th>Interest</th><th>Balance</th></tr>";
 let balance = P;
 
@@ -251,26 +248,30 @@ img.onload = function(){
 doc.setFillColor(37,99,235);
 doc.rect(0,0,210,25,"F");
 
-doc.addImage(img,'PNG',10,6,18,12);
+// PERFECT LOGO SIZE
+doc.addImage(img,'PNG',10,5,15,15);
 
 doc.setTextColor(255,255,255);
-doc.setFontSize(14);
-doc.text("RUPEEROOT",40,14);
+doc.setFontSize(16);
+doc.text("RUPEEROOT",35,14);
 
-doc.setFontSize(9);
-doc.text("Your Trusted Loan Partner",40,20);
+doc.setFontSize(10);
+doc.text("Your Trusted Loan Partner",35,20);
 
 doc.setTextColor(0,0,0);
 
+// REMOVE EXTRA SPACING ISSUE
+doc.setFont("helvetica","normal");
+
 doc.rect(10,35,190,40);
 
-doc.text("Loan Amount: Rs. "+P,15,50);
-doc.text("ROI: "+ROI+"%",15,58);
-doc.text("Tenure: "+T+" Years",15,66);
+doc.text("Loan Amount: Rs. " + P,15,50);
+doc.text("ROI: " + ROI + "%",15,58);
+doc.text("Tenure: " + T + " Years",15,66);
 
-doc.text("EMI: Rs. "+EMI.toFixed(0),110,50);
-doc.text("Interest: Rs. "+totalInterest.toFixed(0),110,58);
-doc.text("Total: Rs. "+totalPayment.toFixed(0),110,66);
+doc.text("EMI: Rs. " + EMI.toFixed(0),110,50);
+doc.text("Interest: Rs. " + totalInterest.toFixed(0),110,58);
+doc.text("Total: Rs. " + totalPayment.toFixed(0),110,66);
 
 let y=85;
 doc.text("M",15,y);
