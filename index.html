@@ -13,7 +13,6 @@ body{
   background:#f4f7fb;
 }
 
-/* HEADER */
 .header{
   background:#ffffff;
   padding:15px 30px;
@@ -38,7 +37,6 @@ body{
   color:#6b7280;
 }
 
-/* MAIN */
 .container{
   width:1000px;
   margin:30px auto;
@@ -112,7 +110,6 @@ button{
   border-radius:6px;
   cursor:pointer;
 }
-
 </style>
 </head>
 
@@ -127,7 +124,6 @@ button{
 </div>
 
 <div class="container">
-
 <div class="card">
 
 <label>Loan Amount</label>
@@ -165,15 +161,12 @@ button{
 <button onclick="downloadPDF()">Download Premium PDF</button>
 
 </div>
-
 </div>
 
 <script>
-
 let chart;
 
 function calculate(){
-
 let P = parseFloat(amount.value) || 0;
 let ROI = parseFloat(rate.value) || 0;
 let T = parseFloat(tenure.value) || 0;
@@ -185,11 +178,13 @@ let EMI = (P*R*Math.pow(1+R,N))/(Math.pow(1+R,N)-1);
 let totalPayment = EMI*N;
 let totalInterest = totalPayment-P;
 
-document.getElementById("emi").innerHTML = "₹ " + EMI.toFixed(0);
-document.getElementById("totalPayment").innerHTML = "₹ " + totalPayment.toFixed(0);
-document.getElementById("totalInterest").innerHTML = "₹ " + totalInterest.toFixed(0);
+emi.innerHTML = "₹ " + EMI.toFixed(0);
+totalPaymentEl = document.getElementById("totalPayment");
+totalInterestEl = document.getElementById("totalInterest");
 
-// CHART
+totalPaymentEl.innerHTML = "₹ " + totalPayment.toFixed(0);
+totalInterestEl.innerHTML = "₹ " + totalInterest.toFixed(0);
+
 if(chart) chart.destroy();
 
 chart = new Chart(document.getElementById("chart"), {
@@ -200,15 +195,9 @@ chart = new Chart(document.getElementById("chart"), {
       data:[P,totalInterest],
       backgroundColor:["#2563eb","#93c5fd"]
     }]
-  },
-  options:{
-    plugins:{
-      legend:{ position:"bottom" }
-    }
   }
 });
 
-// TABLE
 let html = "<tr><th>Month</th><th>EMI</th><th>Principal</th><th>Interest</th><th>Balance</th></tr>";
 let balance = P;
 
@@ -226,8 +215,7 @@ html += `<tr>
 </tr>`;
 }
 
-document.getElementById("schedule").innerHTML = html;
-
+schedule.innerHTML = html;
 }
 
 amount.oninput=calculate;
@@ -236,7 +224,7 @@ tenure.oninput=calculate;
 
 calculate();
 
-/* PREMIUM PDF */
+/* PDF */
 function downloadPDF(){
 
 const { jsPDF } = window.jspdf;
@@ -253,13 +241,11 @@ let EMI = (P*R*Math.pow(1+R,N))/(Math.pow(1+R,N)-1);
 let totalPayment = EMI*N;
 let totalInterest = totalPayment-P;
 
-// LOGO LOAD
 let img = new Image();
 img.src = "logo.png";
 
 img.onload = function(){
 
-// HEADER BAR
 doc.setFillColor(37,99,235);
 doc.rect(0,0,210,25,"F");
 
@@ -267,13 +253,13 @@ doc.addImage(img,'PNG',10,5,20,15);
 
 doc.setTextColor(255,255,255);
 doc.setFontSize(14);
-doc.text("RUPEEROOT FINANCIAL SERVICES",40,15);
+doc.text("RUPEEROOT",40,15);
+
 doc.setFontSize(9);
 doc.text("Your Trusted Loan Partner",40,20);
 
 doc.setTextColor(0,0,0);
 
-// SUMMARY BOX
 doc.rect(10,35,190,40);
 
 doc.text("Loan Amount: ₹ "+P,15,50);
@@ -284,7 +270,6 @@ doc.text("EMI: ₹ "+EMI.toFixed(0),110,50);
 doc.text("Interest: ₹ "+totalInterest.toFixed(0),110,58);
 doc.text("Total: ₹ "+totalPayment.toFixed(0),110,66);
 
-// TABLE HEADER
 let y=85;
 doc.text("M",15,y);
 doc.text("EMI",35,y);
@@ -317,11 +302,8 @@ y+=6;
 }
 
 doc.save("RupeeRoot-Premium.pdf");
-
 };
-
 }
-
 </script>
 
 </body>
