@@ -1,87 +1,112 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>RupeeRoot Loan Eligibility</title>
+<title>RUPEEROOT - Smart Eligibility</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link rel="icon" type="image/png" href="logo.png">
 
 <style>
-body{
+*{
   margin:0;
+  padding:0;
+  box-sizing:border-box;
   font-family:'Segoe UI';
-  background:#f4f7fb;
 }
 
+body{
+  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  color:white;
+}
+
+/* HEADER */
 .header{
-  background:#2563eb;
-  padding:15px 30px;
   display:flex;
   align-items:center;
+  gap:10px;
+  padding:15px 20px;
 }
 
 .logo{
-  width:50px;
-  height:50px;
-  margin-right:12px;
+  width:45px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.1);
+  padding:5px;
 }
 
 .brand{
-  font-size:20px;
-  font-weight:600;
-  color:white;
+  font-size:18px;
+  font-weight:bold;
+  color:#00e5ff;
 }
 
 .sub{
-  font-size:12px;
-  color:#e0e7ff;
+  font-size:11px;
+  color:#80d8ff;
 }
 
+/* CARD */
 .container{
-  width:600px;
-  margin:30px auto;
+  padding:20px;
 }
 
 .card{
-  background:white;
-  padding:25px;
-  border-radius:10px;
-  border:1px solid #e5e7eb;
+  background:rgba(0,0,0,0.6);
+  border-radius:20px;
+  padding:20px;
+  backdrop-filter: blur(20px);
+  box-shadow:0 0 25px rgba(0,229,255,0.2);
 }
 
-label{
-  display:block;
-  margin-top:15px;
-  font-weight:500;
-}
-
-input, select{
+input,select{
   width:100%;
-  padding:10px;
-  margin-top:5px;
-  border:1px solid #d1d5db;
-  border-radius:6px;
-}
-
-.result{
-  margin-top:20px;
-  background:#f9fafb;
-  padding:15px;
-  border-radius:8px;
-}
-
-.big{
-  font-size:18px;
-  font-weight:600;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  margin-bottom:12px;
+  background:#111;
+  color:white;
 }
 
 button{
-  margin-top:20px;
-  padding:12px;
   width:100%;
-  background:#2563eb;
-  color:white;
+  padding:14px;
+  border-radius:12px;
   border:none;
-  border-radius:6px;
+  font-weight:bold;
+  font-size:15px;
+  cursor:pointer;
+  background:linear-gradient(90deg,#00e5ff,#00ffa3);
+  color:black;
+}
+
+/* RESULT */
+.result{
+  margin-top:20px;
+}
+
+.box{
+  background:rgba(0,0,0,0.6);
+  padding:15px;
+  border-radius:15px;
+  margin-bottom:12px;
+  box-shadow:0 0 15px rgba(0,0,0,0.4);
+}
+
+.highlight{
+  font-size:20px;
+  color:#00ffa3;
+  font-weight:bold;
+}
+
+.good{color:#00ffa3;}
+.mid{color:orange;}
+.bad{color:red;}
+
+.apply{
+  margin-top:10px;
+  background:#25D366;
+  color:white;
 }
 </style>
 </head>
@@ -92,35 +117,27 @@ button{
   <img src="logo.png" class="logo">
   <div>
     <div class="brand">RUPEEROOT</div>
-    <div class="sub">Your Trusted Loan Partner</div>
+    <div class="sub">Smart Loan Engine</div>
   </div>
 </div>
 
 <div class="container">
 <div class="card">
 
-<label>Customer Salary</label>
-<input type="number" id="salary">
+<input type="number" id="salary" placeholder="💰 Monthly Salary">
+<input type="number" id="emi" placeholder="💳 Existing EMI" value="0">
+<input type="number" id="cc" placeholder="💳 Credit Card Outstanding" value="0">
 
-<label>Total Existing EMI</label>
-<input type="number" id="emi" value="0">
-
-<label>CC Outstanding</label>
-<input type="number" id="cc" value="0">
-
-<label>HL Live</label>
 <select id="hl">
-<option value="no">No</option>
-<option value="yes">Yes</option>
+<option value="no">🏠 No Home Loan</option>
+<option value="yes">🏠 Home Loan Active</option>
 </select>
 
-<label>House Type</label>
 <select id="house">
-<option value="rented">Rented</option>
-<option value="owned">Owned</option>
+<option value="rented">🏢 Rented</option>
+<option value="owned">🏡 Owned</option>
 </select>
 
-<label>Bank</label>
 <select id="bank">
 <option value="bajaj">Bajaj</option>
 <option value="tata">Tata</option>
@@ -131,7 +148,7 @@ button{
 <option value="icici">ICICI</option>
 </select>
 
-<button onclick="calculate()">Check Eligibility</button>
+<button onclick="calculate()">Check Smart Eligibility</button>
 
 <div class="result" id="resultBox"></div>
 
@@ -141,74 +158,90 @@ button{
 <script>
 function calculate(){
 
-let salary = parseFloat(document.getElementById("salary").value) || 0;
-let emi = parseFloat(document.getElementById("emi").value) || 0;
-let cc = parseFloat(document.getElementById("cc").value) || 0;
+let salary = +salary.value || 0;
+let emi = +document.getElementById("emi").value || 0;
+let cc = +document.getElementById("cc").value || 0;
 let hl = document.getElementById("hl").value;
 let house = document.getElementById("house").value;
 let bank = document.getElementById("bank").value;
 
 let foir = 0;
 
-// 🔥 FOIR LOGIC
-if(bank === "kotak"){
-    if(hl === "yes" && house === "owned"){
-        foir = 65;
-    } else {
-        foir = 60;
-    }
-} else {
+/* FOIR */
+if(bank==="kotak"){
+  foir = (hl==="yes" && house==="owned") ? 65 : 60;
+}else{
+  if(salary>=50000 && salary<60000) foir=60;
+  else if(salary>=60000 && salary<70000) foir=65;
+  else if(salary>=70000 && salary<100000) foir=70;
+  else if(salary>=100000) foir=75;
 
-    if(salary >= 50000 && salary < 60000){
-        foir = 60;
-    } else if(salary >= 60000 && salary < 70000){
-        foir = 65;
-    } else if(salary >= 70000 && salary < 100000){
-        foir = 70;
-    } else if(salary >= 100000){
-        foir = 75;
-    }
-
-    if(hl === "yes" && house === "owned"){
-        foir += 5;
-    }
+  if(hl==="yes" && house==="owned") foir+=5;
 }
 
-// ✅ ELIGIBLE EMI
-let eligibleEMI = (salary * foir / 100) - emi - (cc * 0.05);
+/* EMI */
+let eligibleEMI = (salary*foir/100) - emi - (cc*0.05);
 
-// 🔥 EMI BASED LOAN
-let rate = 0.14/12;
-let n = 60;
+/* EMI Loan */
+let r=0.14/12, n=60;
+let emiLoan = (eligibleEMI*(Math.pow(1+r,n)-1))/(r*Math.pow(1+r,n));
 
-let emiLoan = (eligibleEMI * (Math.pow(1+rate,n)-1)) / (rate*Math.pow(1+rate,n));
-emiLoan = Math.round(emiLoan);
+/* Multiplier */
+let multMap={
+bajaj:20,tata:18,kotak:22,abfl:20,idfc:18,hdfc:24,icici:22
+};
 
-// 🔥 MULTIPLIER LOGIC (simple industry avg)
-let multiplier = 0;
+let multiplierLoan = salary*(multMap[bank]||20);
 
-if(bank === "bajaj") multiplier = 20;
-if(bank === "tata") multiplier = 18;
-if(bank === "kotak") multiplier = 22;
-if(bank === "abfl") multiplier = 20;
-if(bank === "idfc") multiplier = 18;
-if(bank === "hdfc") multiplier = 24;
-if(bank === "icici") multiplier = 22;
+/* Approval % */
+let score = (foir*0.8) - (emi/1000);
+let status="bad", text="Low ❌";
 
-let multiplierLoan = salary * multiplier;
+if(score>60){status="good"; text="High 🔥";}
+else if(score>40){status="mid"; text="Medium ⚠️";}
 
-// RESULT
-if(eligibleEMI <= 0){
-    document.getElementById("resultBox").innerHTML =
-    "<h3>❌ Not Eligible</h3>";
-    return;
+if(eligibleEMI<=0){
+resultBox.innerHTML=`<div class="box bad">❌ Not Eligible</div>`;
+return;
 }
 
-document.getElementById("resultBox").innerHTML =
-"<p><b>FOIR:</b> " + foir + "%</p>" +
-"<p><b>Eligible EMI:</b> ₹ " + Math.round(eligibleEMI) + "</p>" +
-"<div class='big'>EMI Based Loan: ₹ " + emiLoan.toLocaleString() + "</div>" +
-"<br><div class='big'>Multiplier Loan: ₹ " + multiplierLoan.toLocaleString() + "</div>";
+/* Best Bank */
+let best="HDFC";
+if(foir<60) best="Tata / Bajaj";
+if(hl==="yes") best="Kotak";
+
+/* UI OUTPUT */
+resultBox.innerHTML=`
+<div class="box">
+FOIR: <b>${foir}%</b>
+</div>
+
+<div class="box">
+Eligible EMI: ₹ ${Math.round(eligibleEMI)}
+</div>
+
+<div class="box">
+EMI Based Loan<br>
+<span class="highlight">₹ ${Math.round(emiLoan).toLocaleString()}</span>
+</div>
+
+<div class="box">
+Multiplier Loan<br>
+<span class="highlight">₹ ${multiplierLoan.toLocaleString()}</span>
+</div>
+
+<div class="box">
+Best Bank: <b>${best}</b>
+</div>
+
+<div class="box ${status}">
+Approval Chance: ${text}
+</div>
+
+<button class="apply" onclick="window.location.href='https://wa.me/918750370822'">
+Apply on WhatsApp
+</button>
+`;
 }
 </script>
 
