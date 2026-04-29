@@ -29,6 +29,7 @@ body{
 
 .logo{
   width:45px;
+  border-radius:10px;
 }
 
 .brand{
@@ -66,6 +67,7 @@ button{
   padding:14px;
   border-radius:12px;
   border:none;
+  font-weight:bold;
   background:linear-gradient(90deg,#00e5ff,#00ffa3);
 }
 
@@ -112,14 +114,6 @@ button{
 <input type="number" id="emi" placeholder="💳 Existing EMI">
 <input type="number" id="cc" placeholder="💳 Credit Card Outstanding">
 
-<!-- 🔥 BT TOGGLE -->
-<label><input type="checkbox" id="btToggle" onchange="toggleBT()"> Balance Transfer Case</label>
-
-<!-- 🔥 BT FIELD -->
-<div id="btField" style="display:none;">
-<input type="number" id="btLoan" placeholder="🔁 BT Outstanding Loan">
-</div>
-
 <select id="hl">
 <option value="no">🏠 No Home Loan</option>
 <option value="yes">🏠 Home Loan Active</option>
@@ -148,26 +142,18 @@ button{
 </div>
 
 <script>
-
-function toggleBT(){
-let toggle = document.getElementById("btToggle").checked;
-document.getElementById("btField").style.display = toggle ? "block" : "none";
-}
-
 function calculate(){
 
 let salary = parseFloat(document.getElementById("salary").value) || 0;
 let emi = parseFloat(document.getElementById("emi").value) || 0;
 let cc = parseFloat(document.getElementById("cc").value) || 0;
-let bt = parseFloat(document.getElementById("btLoan").value) || 0;
-
 let hl = document.getElementById("hl").value;
 let house = document.getElementById("house").value;
 let bank = document.getElementById("bank").value;
 
 let foir = 0;
 
-/* FOIR */
+/* FOIR LOGIC */
 if(bank==="kotak"){
   foir = (hl==="yes" && house==="owned") ? 65 : 60;
 }else{
@@ -179,10 +165,11 @@ if(bank==="kotak"){
   if(hl==="yes" && house==="owned") foir+=5;
 }
 
-if(foir>75) foir=75;
+/* 🔒 FOIR MAX CAP */
+if(foir > 75) foir = 75;
 
-/* 🔥 EMI CALC (BT include) */
-let eligibleEMI = (salary*foir/100) - emi - (cc*0.05) - (bt*0.03);
+/* EMI */
+let eligibleEMI = (salary*foir/100) - emi - (cc*0.05);
 
 /* EMI Loan */
 let r=0.14/12, n=60;
@@ -195,7 +182,7 @@ bajaj:20,tata:18,kotak:22,abfl:20,idfc:18,hdfc:24,icici:22
 
 let multiplierLoan = salary*(multMap[bank]||20);
 
-/* CAPPING */
+/* 🔒 LOAN CAPPING */
 if(bank==="bajaj" || bank==="tata" || bank==="abfl"){
   if(emiLoan > 5000000) emiLoan = 5000000;
   if(multiplierLoan > 5000000) multiplierLoan = 5000000;
