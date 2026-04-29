@@ -1,310 +1,129 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>RupeeRoot EMI Calculator</title>
+    <title>RUPEEROOT - EMI Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- ✅ FAVICON (same logo) -->
-<link rel="icon" type="image/png" href="logo.png">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="logo.png">
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI';
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: white;
+        }
 
-<style>
-body{
-  margin:0;
-  font-family:'Segoe UI';
-  background:#f4f7fb;
-}
+        .header {
+            text-align: center;
+            padding: 20px;
+            font-size: 22px;
+            font-weight: bold;
+            background: rgba(0,0,0,0.4);
+        }
 
-.header{
-  background:#2563eb;
-  padding:15px 30px;
-  display:flex;
-  align-items:center;
-}
+        .container {
+            padding: 20px;
+        }
 
-.logo{
-  width:50px;
-  height:50px;
-  object-fit:contain;
-  margin-right:12px;
-}
+        .card {
+            background: rgba(0,0,0,0.6);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
 
-.brand{
-  font-size:20px;
-  font-weight:600;
-  color:white;
-}
+        input {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            border-radius: 12px;
+            border: none;
+            background: #111;
+            color: white;
+        }
 
-.sub{
-  font-size:12px;
-  color:#e0e7ff;
-}
+        button {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            background: linear-gradient(90deg, #00e5ff, #00ffa3);
+            color: black;
+        }
 
-.container{
-  width:1000px;
-  margin:30px auto;
-}
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(0,0,0,0.5);
+            display: none;
+        }
 
-.card{
-  background:white;
-  padding:25px;
-  border-radius:10px;
-  border:1px solid #e5e7eb;
-}
+        .link-btn {
+            margin-top: 10px;
+            background: linear-gradient(90deg, #00ffa3, #00e5ff);
+        }
 
-label{
-  display:block;
-  margin-top:15px;
-  font-weight:500;
-}
-
-input{
-  width:100%;
-  padding:10px;
-  margin-top:5px;
-  border:1px solid #d1d5db;
-  border-radius:6px;
-}
-
-.result{
-  display:flex;
-  gap:20px;
-  margin-top:20px;
-}
-
-.box{
-  flex:1;
-  background:#f9fafb;
-  padding:15px;
-  border-radius:8px;
-  border:1px solid #e5e7eb;
-}
-
-.big{
-  font-size:18px;
-  font-weight:600;
-}
-
-.chart-box{
-  width:300px;
-  margin:20px auto;
-}
-
-table{
-  width:100%;
-  margin-top:20px;
-  border-collapse:collapse;
-  font-size:12px;
-}
-
-th,td{
-  padding:6px;
-  border:1px solid #e5e7eb;
-  text-align:center;
-}
-
-button{
-  margin-top:20px;
-  padding:12px;
-  width:100%;
-  background:#2563eb;
-  color:white;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-}
-</style>
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #aaa;
+        }
+    </style>
 </head>
 
 <body>
 
 <div class="header">
-  <img src="logo.png" class="logo">
-  <div>
-    <div class="brand">RUPEEROOT</div>
-    <div class="sub">Your Trusted Loan Partner</div>
-  </div>
+    RUPEEROOT - EMI Calculator
 </div>
 
 <div class="container">
-<div class="card">
+    <div class="card">
 
-<label>Loan Amount</label>
-<input type="number" id="amount" value="500000">
+        <input type="number" id="amount" placeholder="Loan Amount (₹)">
+        <input type="number" id="rate" placeholder="Interest Rate (%)">
+        <input type="number" id="months" placeholder="Loan Tenure (Months)">
 
-<label>Interest Rate (%)</label>
-<input type="number" id="rate" value="10">
+        <button onclick="calculateEMI()">Calculate EMI</button>
 
-<label>Tenure (Years)</label>
-<input type="number" id="tenure" value="5">
+        <div class="result" id="resultBox"></div>
 
-<div class="result">
-  <div class="box">
-    <p>Monthly EMI</p>
-    <div class="big" id="emi"></div>
-  </div>
+        <!-- 🔥 Eligibility Button -->
+        <a href="loan-eligibility.html">
+            <button class="link-btn">Check Loan Eligibility</button>
+        </a>
 
-  <div class="box">
-    <p>Total Interest</p>
-    <div class="big" id="totalInterest"></div>
-  </div>
-
-  <div class="box">
-    <p>Total Payment</p>
-    <div class="big" id="totalPayment"></div>
-  </div>
+    </div>
 </div>
 
-<div class="chart-box">
-  <canvas id="chart"></canvas>
-</div>
-
-<table id="schedule"></table>
-
-<button onclick="downloadPDF()">Download Premium PDF</button>
-
-</div>
+<div class="footer">
+    © RUPEEROOT Finance | Smart Loan Tools
 </div>
 
 <script>
-let chart;
+function calculateEMI() {
+    let P = document.getElementById("amount").value;
+    let r = document.getElementById("rate").value / 12 / 100;
+    let n = document.getElementById("months").value;
 
-function calculate(){
+    if(P == "" || r == "" || n == "") {
+        alert("Please fill all fields");
+        return;
+    }
 
-let P = parseFloat(amount.value) || 0;
-let ROI = parseFloat(rate.value) || 0;
-let T = parseFloat(tenure.value) || 0;
+    let emi = (P * r * Math.pow(1+r, n)) / (Math.pow(1+r, n) - 1);
+    emi = Math.round(emi);
 
-let R = ROI/12/100;
-let N = T*12;
-
-let EMI = (P*R*Math.pow(1+R,N))/(Math.pow(1+R,N)-1);
-let totalPaymentVal = EMI*N;
-let totalInterestVal = totalPaymentVal-P;
-
-document.getElementById("emi").innerHTML = "Rs. " + EMI.toFixed(0);
-document.getElementById("totalPayment").innerHTML = "Rs. " + totalPaymentVal.toFixed(0);
-document.getElementById("totalInterest").innerHTML = "Rs. " + totalInterestVal.toFixed(0);
-
-if(chart) chart.destroy();
-
-chart = new Chart(document.getElementById("chart"), {
-  type:"doughnut",
-  data:{
-    labels:["Principal","Interest"],
-    datasets:[{
-      data:[P,totalInterestVal],
-      backgroundColor:["#2563eb","#93c5fd"]
-    }]
-  }
-});
-
-let html = "<tr><th>Month</th><th>EMI</th><th>Principal</th><th>Interest</th><th>Balance</th></tr>";
-let balance = P;
-
-for(let i=1;i<=N;i++){
-let interestPart = balance * R;
-let principalPart = EMI - interestPart;
-balance -= principalPart;
-
-html += `<tr>
-<td>${i}</td>
-<td>${EMI.toFixed(0)}</td>
-<td>${principalPart.toFixed(0)}</td>
-<td>${interestPart.toFixed(0)}</td>
-<td>${balance.toFixed(0)}</td>
-</tr>`;
-}
-
-document.getElementById("schedule").innerHTML = html;
-}
-
-amount.oninput=calculate;
-rate.oninput=calculate;
-tenure.oninput=calculate;
-
-calculate();
-
-/* PDF */
-function downloadPDF(){
-
-const { jsPDF } = window.jspdf;
-let doc = new jsPDF();
-
-let P = parseFloat(amount.value);
-let ROI = parseFloat(rate.value);
-let T = parseFloat(tenure.value);
-
-let R = ROI/12/100;
-let N = T*12;
-
-let EMI = (P*R*Math.pow(1+R,N))/(Math.pow(1+R,N)-1);
-let totalPayment = EMI*N;
-let totalInterest = totalPayment-P;
-
-let img = new Image();
-img.src = "logo.png";
-
-img.onload = function(){
-
-doc.setFillColor(37,99,235);
-doc.rect(0,0,210,25,"F");
-
-doc.addImage(img,'PNG',10,5,15,15);
-
-doc.setTextColor(255,255,255);
-doc.setFontSize(16);
-doc.text("RUPEEROOT",35,14);
-
-doc.setFontSize(10);
-doc.text("Your Trusted Loan Partner",35,20);
-
-doc.setTextColor(0,0,0);
-
-doc.rect(10,35,190,40);
-
-doc.text("Loan Amount: Rs. " + P,15,50);
-doc.text("ROI: " + ROI + "%",15,58);
-doc.text("Tenure: " + T + " Years",15,66);
-
-doc.text("EMI: Rs. " + EMI.toFixed(0),110,50);
-doc.text("Interest: Rs. " + totalInterest.toFixed(0),110,58);
-doc.text("Total: Rs. " + totalPayment.toFixed(0),110,66);
-
-let y=85;
-doc.text("M",15,y);
-doc.text("EMI",35,y);
-doc.text("Principal",70,y);
-doc.text("Interest",120,y);
-doc.text("Balance",160,y);
-
-y+=8;
-
-let balance=P;
-
-for(let i=1;i<=N;i++){
-
-let interestPart = balance * R;
-let principalPart = EMI - interestPart;
-balance -= principalPart;
-
-if(y>280){
-doc.addPage();
-y=20;
-}
-
-doc.text(String(i),15,y);
-doc.text(EMI.toFixed(0),35,y);
-doc.text(principalPart.toFixed(0),70,y);
-doc.text(interestPart.toFixed(0),120,y);
-doc.text(balance.toFixed(0),160,y);
-
-y+=6;
-}
-
-doc.save("RupeeRoot-Premium.pdf");
-};
+    document.getElementById("resultBox").style.display = "block";
+    document.getElementById("resultBox").innerHTML =
+    "<h3>Your EMI: ₹ " + emi.toLocaleString() + "</h3>";
 }
 </script>
 
