@@ -94,10 +94,6 @@ button{
   font-weight:bold;
 }
 
-.good{color:#16a34a;}
-.mid{color:orange;}
-.bad{color:red;}
-
 .apply{
   margin-top:10px;
   background:#25D366;
@@ -184,20 +180,10 @@ bajaj:20,tata:18,kotak:22,abfl:20,idfc:18,hdfc:24,icici:22
 
 let multiplierLoan = salary*(multMap[bank]||20);
 
-let score = (foir*0.8) - (emi/1000);
-let status="bad", text="Low ❌";
-
-if(score>60){status="good"; text="High 🔥";}
-else if(score>40){status="mid"; text="Medium ⚠️";}
-
 if(eligibleEMI<=0){
-resultBox.innerHTML=`<div class="box bad">❌ Not Eligible</div>`;
+resultBox.innerHTML=`<div class="box">❌ Not Eligible</div>`;
 return;
 }
-
-let best="HDFC";
-if(foir<60) best="Tata / Bajaj";
-if(hl==="yes") best="Kotak";
 
 resultBox.innerHTML=`
 <div class="box"><b>FOIR:</b> ${foir}%</div>
@@ -212,12 +198,6 @@ EMI Based Loan<br>
 <div class="box">
 Multiplier Loan<br>
 <span class="highlight">₹ ${multiplierLoan.toLocaleString()}</span>
-</div>
-
-<div class="box"><b>Best Bank:</b> ${best}</div>
-
-<div class="box ${status}">
-<b>Approval Chance:</b> ${text}
 </div>
 
 <button class="apply" onclick="window.location.href='https://wa.me/918750370822'">
