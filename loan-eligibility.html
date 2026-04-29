@@ -1,158 +1,203 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Loan Eligibility - RUPEEROOT</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RupeeRoot Loan Eligibility</title>
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="logo.png">
+<!-- SAME FAVICON -->
+<link rel="icon" type="image/png" href="logo.png">
 
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Segoe UI';
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            color: white;
-        }
+<style>
+body{
+  margin:0;
+  font-family:'Segoe UI';
+  background:#f4f7fb;
+}
 
-        .header {
-            text-align: center;
-            padding: 20px;
-            font-size: 22px;
-            font-weight: bold;
-            background: rgba(0,0,0,0.4);
-        }
+.header{
+  background:#2563eb;
+  padding:15px 30px;
+  display:flex;
+  align-items:center;
+}
 
-        .container {
-            padding: 20px;
-        }
+.logo{
+  width:50px;
+  height:50px;
+  object-fit:contain;
+  margin-right:12px;
+}
 
-        .card {
-            background: rgba(0,0,0,0.6);
-            padding: 25px;
-            border-radius: 20px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        }
+.brand{
+  font-size:20px;
+  font-weight:600;
+  color:white;
+}
 
-        input, select {
-            width: 100%;
-            padding: 14px;
-            margin: 10px 0;
-            border-radius: 12px;
-            border: none;
-            background: #111;
-            color: white;
-            font-size: 14px;
-        }
+.sub{
+  font-size:12px;
+  color:#e0e7ff;
+}
 
-        button {
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            border: none;
-            font-weight: bold;
-            font-size: 15px;
-            cursor: pointer;
-            background: linear-gradient(90deg, #00e5ff, #00ffa3);
-            color: black;
-        }
+.container{
+  width:600px;
+  margin:30px auto;
+}
 
-        .result {
-            margin-top: 20px;
-            padding: 20px;
-            border-radius: 15px;
-            background: rgba(0,0,0,0.5);
-            display: none;
-        }
+.card{
+  background:white;
+  padding:25px;
+  border-radius:10px;
+  border:1px solid #e5e7eb;
+}
 
-        .highlight {
-            color: #00ffa3;
-            font-size: 22px;
-            font-weight: bold;
-        }
+label{
+  display:block;
+  margin-top:15px;
+  font-weight:500;
+}
 
-        .apply-btn {
-            margin-top: 15px;
-            background: #25D366;
-            color: white;
-        }
+input, select{
+  width:100%;
+  padding:10px;
+  margin-top:5px;
+  border:1px solid #d1d5db;
+  border-radius:6px;
+}
 
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 12px;
-            color: #aaa;
-        }
-    </style>
+.result{
+  margin-top:20px;
+  background:#f9fafb;
+  padding:15px;
+  border-radius:8px;
+  border:1px solid #e5e7eb;
+}
+
+.big{
+  font-size:18px;
+  font-weight:600;
+}
+
+button{
+  margin-top:20px;
+  padding:12px;
+  width:100%;
+  background:#2563eb;
+  color:white;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+</style>
 </head>
 
 <body>
 
 <div class="header">
-    RUPEEROOT - Loan Eligibility Checker
+  <img src="logo.png" class="logo">
+  <div>
+    <div class="brand">RUPEEROOT</div>
+    <div class="sub">Your Trusted Loan Partner</div>
+  </div>
 </div>
 
 <div class="container">
-    <div class="card">
+<div class="card">
 
-        <input type="number" id="income" placeholder="Monthly Income (₹)">
-        <input type="number" id="emi" placeholder="Existing EMI (₹)" value="0">
+<label>Customer Salary</label>
+<input type="number" id="salary">
 
-        <select id="tenure">
-            <option value="12">12 Months</option>
-            <option value="24">24 Months</option>
-            <option value="36">36 Months</option>
-            <option value="48">48 Months</option>
-            <option value="60">60 Months</option>
-        </select>
+<label>Total Existing EMI</label>
+<input type="number" id="emi" value="0">
 
-        <button onclick="calculate()">Check Eligibility</button>
+<label>CC Outstanding</label>
+<input type="number" id="cc" value="0">
 
-        <div class="result" id="resultBox"></div>
+<label>HL Live</label>
+<select id="hl">
+<option value="no">No</option>
+<option value="yes">Yes</option>
+</select>
 
-    </div>
+<label>House Type</label>
+<select id="house">
+<option value="rented">Rented</option>
+<option value="owned">Owned</option>
+</select>
+
+<label>Bank</label>
+<select id="bank">
+<option value="bajaj">Bajaj</option>
+<option value="tata">Tata</option>
+<option value="kotak">Kotak</option>
+<option value="abfl">ABFL</option>
+<option value="idfc">IDFC</option>
+<option value="hdfc">HDFC</option>
+<option value="icici">ICICI</option>
+</select>
+
+<button onclick="calculate()">Check Eligibility</button>
+
+<div class="result" id="resultBox"></div>
+
 </div>
-
-<div class="footer">
-    © RUPEEROOT Finance | Fast Loan Approval
 </div>
 
 <script>
-function calculate() {
-    let income = document.getElementById("income").value;
-    let emi = document.getElementById("emi").value;
-    let tenure = document.getElementById("tenure").value;
+function calculate(){
 
-    if(income == "") {
-        alert("Please enter your income");
-        return;
+let salary = parseFloat(document.getElementById("salary").value) || 0;
+let emi = parseFloat(document.getElementById("emi").value) || 0;
+let cc = parseFloat(document.getElementById("cc").value) || 0;
+let hl = document.getElementById("hl").value;
+let house = document.getElementById("house").value;
+let bank = document.getElementById("bank").value;
+
+let foir = 0;
+
+// FOIR LOGIC
+if(bank === "kotak"){
+    if(hl === "yes" && house === "owned"){
+        foir = 65;
+    } else {
+        foir = 60;
+    }
+} else {
+
+    if(salary >= 50000 && salary < 60000){
+        foir = 60;
+    } else if(salary >= 60000 && salary < 70000){
+        foir = 65;
+    } else if(salary >= 70000 && salary < 100000){
+        foir = 70;
+    } else if(salary >= 100000){
+        foir = 75;
     }
 
-    let eligibleEMI = income * 0.5 - emi;
-
-    if(eligibleEMI <= 0) {
-        document.getElementById("resultBox").style.display = "block";
-        document.getElementById("resultBox").innerHTML =
-        "<h3>❌ Not Eligible</h3><p>Your EMI burden is too high.</p>";
-        return;
+    if(hl === "yes" && house === "owned"){
+        foir += 5;
     }
-
-    let rate = 0.14 / 12;
-    let n = tenure;
-
-    let loan = (eligibleEMI * (Math.pow(1+rate, n) - 1)) / (rate * Math.pow(1+rate, n));
-    loan = Math.round(loan);
-
-    document.getElementById("resultBox").style.display = "block";
-    document.getElementById("resultBox").innerHTML =
-    "<p>You are eligible for loan up to</p>" +
-    "<div class='highlight'>₹ " + loan.toLocaleString() + "</div>" +
-    "<p>Approx EMI: ₹ " + Math.round(eligibleEMI) + "</p>" +
-    "<button class='apply-btn' onclick='apply()'>Apply on WhatsApp</button>";
 }
 
-function apply() {
-    window.location.href = "https://wa.me/918750370822";
+// ELIGIBLE EMI
+let eligibleEMI = (salary * foir / 100) - emi - (cc * 0.05);
+
+if(eligibleEMI < 0){
+    document.getElementById("resultBox").innerHTML =
+    "<h3>Not Eligible</h3>";
+    return;
+}
+
+// LOAN CALC (Assume 5 years, 14%)
+let rate = 0.14/12;
+let n = 60;
+
+let loan = (eligibleEMI * (Math.pow(1+rate,n)-1)) / (rate*Math.pow(1+rate,n));
+loan = Math.round(loan);
+
+document.getElementById("resultBox").innerHTML =
+"<p>FOIR: " + foir + "%</p>" +
+"<p>Eligible EMI: ₹ " + Math.round(eligibleEMI) + "</p>" +
+"<div class='big'>Eligible Loan: ₹ " + loan.toLocaleString() + "</div>";
 }
 </script>
 
