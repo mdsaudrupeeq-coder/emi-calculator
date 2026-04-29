@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Loan Eligibility - RUPEEROOT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="logo.png">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI';
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: white;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px;
+            font-size: 22px;
+            font-weight: bold;
+            background: rgba(0,0,0,0.4);
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .card {
+            background: rgba(0,0,0,0.6);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            border-radius: 12px;
+            border: none;
+            background: #111;
+            color: white;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            background: linear-gradient(90deg, #00e5ff, #00ffa3);
+            color: black;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(0,0,0,0.5);
+            display: none;
+        }
+
+        .highlight {
+            color: #00ffa3;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .apply-btn {
+            margin-top: 15px;
+            background: #25D366;
+            color: white;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #aaa;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    RUPEEROOT - Loan Eligibility Checker
+</div>
+
+<div class="container">
+    <div class="card">
+
+        <input type="number" id="income" placeholder="Monthly Income (₹)">
+        <input type="number" id="emi" placeholder="Existing EMI (₹)" value="0">
+
+        <select id="tenure">
+            <option value="12">12 Months</option>
+            <option value="24">24 Months</option>
+            <option value="36">36 Months</option>
+            <option value="48">48 Months</option>
+            <option value="60">60 Months</option>
+        </select>
+
+        <button onclick="calculate()">Check Eligibility</button>
+
+        <div class="result" id="resultBox"></div>
+
+    </div>
+</div>
+
+<div class="footer">
+    © RUPEEROOT Finance | Fast Loan Approval
+</div>
+
+<script>
+function calculate() {
+    let income = document.getElementById("income").value;
+    let emi = document.getElementById("emi").value;
+    let tenure = document.getElementById("tenure").value;
+
+    if(income == "") {
+        alert("Please enter your income");
+        return;
+    }
+
+    let eligibleEMI = income * 0.5 - emi;
+
+    if(eligibleEMI <= 0) {
+        document.getElementById("resultBox").style.display = "block";
+        document.getElementById("resultBox").innerHTML =
+        "<h3>❌ Not Eligible</h3><p>Your EMI burden is too high.</p>";
+        return;
+    }
+
+    let rate = 0.14 / 12;
+    let n = tenure;
+
+    let loan = (eligibleEMI * (Math.pow(1+rate, n) - 1)) / (rate * Math.pow(1+rate, n));
+    loan = Math.round(loan);
+
+    document.getElementById("resultBox").style.display = "block";
+    document.getElementById("resultBox").innerHTML =
+    "<p>You are eligible for loan up to</p>" +
+    "<div class='highlight'>₹ " + loan.toLocaleString() + "</div>" +
+    "<p>Approx EMI: ₹ " + Math.round(eligibleEMI) + "</p>" +
+    "<button class='apply-btn' onclick='apply()'>Apply on WhatsApp</button>";
+}
+
+function apply() {
+    window.location.href = "https://wa.me/918750370822";
+}
+</script>
+
+</body>
+</html>
