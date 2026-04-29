@@ -3,7 +3,6 @@
 <head>
 <title>RupeeRoot Loan Eligibility</title>
 
-<!-- SAME FAVICON -->
 <link rel="icon" type="image/png" href="logo.png">
 
 <style>
@@ -23,7 +22,6 @@ body{
 .logo{
   width:50px;
   height:50px;
-  object-fit:contain;
   margin-right:12px;
 }
 
@@ -69,7 +67,6 @@ input, select{
   background:#f9fafb;
   padding:15px;
   border-radius:8px;
-  border:1px solid #e5e7eb;
 }
 
 .big{
@@ -85,7 +82,6 @@ button{
   color:white;
   border:none;
   border-radius:6px;
-  cursor:pointer;
 }
 </style>
 </head>
@@ -154,7 +150,7 @@ let bank = document.getElementById("bank").value;
 
 let foir = 0;
 
-// FOIR LOGIC
+// 🔥 FOIR LOGIC
 if(bank === "kotak"){
     if(hl === "yes" && house === "owned"){
         foir = 65;
@@ -178,26 +174,41 @@ if(bank === "kotak"){
     }
 }
 
-// ELIGIBLE EMI
+// ✅ ELIGIBLE EMI
 let eligibleEMI = (salary * foir / 100) - emi - (cc * 0.05);
 
-if(eligibleEMI < 0){
-    document.getElementById("resultBox").innerHTML =
-    "<h3>Not Eligible</h3>";
-    return;
-}
-
-// LOAN CALC (Assume 5 years, 14%)
+// 🔥 EMI BASED LOAN
 let rate = 0.14/12;
 let n = 60;
 
-let loan = (eligibleEMI * (Math.pow(1+rate,n)-1)) / (rate*Math.pow(1+rate,n));
-loan = Math.round(loan);
+let emiLoan = (eligibleEMI * (Math.pow(1+rate,n)-1)) / (rate*Math.pow(1+rate,n));
+emiLoan = Math.round(emiLoan);
+
+// 🔥 MULTIPLIER LOGIC (simple industry avg)
+let multiplier = 0;
+
+if(bank === "bajaj") multiplier = 20;
+if(bank === "tata") multiplier = 18;
+if(bank === "kotak") multiplier = 22;
+if(bank === "abfl") multiplier = 20;
+if(bank === "idfc") multiplier = 18;
+if(bank === "hdfc") multiplier = 24;
+if(bank === "icici") multiplier = 22;
+
+let multiplierLoan = salary * multiplier;
+
+// RESULT
+if(eligibleEMI <= 0){
+    document.getElementById("resultBox").innerHTML =
+    "<h3>❌ Not Eligible</h3>";
+    return;
+}
 
 document.getElementById("resultBox").innerHTML =
-"<p>FOIR: " + foir + "%</p>" +
-"<p>Eligible EMI: ₹ " + Math.round(eligibleEMI) + "</p>" +
-"<div class='big'>Eligible Loan: ₹ " + loan.toLocaleString() + "</div>";
+"<p><b>FOIR:</b> " + foir + "%</p>" +
+"<p><b>Eligible EMI:</b> ₹ " + Math.round(eligibleEMI) + "</p>" +
+"<div class='big'>EMI Based Loan: ₹ " + emiLoan.toLocaleString() + "</div>" +
+"<br><div class='big'>Multiplier Loan: ₹ " + multiplierLoan.toLocaleString() + "</div>";
 }
 </script>
 
