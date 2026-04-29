@@ -60,8 +60,6 @@ input,select{
   border-radius:10px;
   border:1px solid #d1d5db;
   margin-bottom:12px;
-  background:white;
-  color:black;
 }
 
 button{
@@ -70,10 +68,7 @@ button{
   border-radius:12px;
   border:none;
   font-weight:bold;
-  font-size:15px;
-  cursor:pointer;
   background:linear-gradient(90deg,#00e5ff,#00ffa3);
-  color:black;
 }
 
 .result{
@@ -158,6 +153,7 @@ let bank = document.getElementById("bank").value;
 
 let foir = 0;
 
+/* FOIR LOGIC */
 if(bank==="kotak"){
   foir = (hl==="yes" && house==="owned") ? 65 : 60;
 }else{
@@ -169,16 +165,28 @@ if(bank==="kotak"){
   if(hl==="yes" && house==="owned") foir+=5;
 }
 
+/* 🔒 FOIR MAX CAP */
+if(foir > 75) foir = 75;
+
+/* EMI */
 let eligibleEMI = (salary*foir/100) - emi - (cc*0.05);
 
+/* EMI Loan */
 let r=0.14/12, n=60;
 let emiLoan = (eligibleEMI*(Math.pow(1+r,n)-1))/(r*Math.pow(1+r,n));
 
+/* MULTIPLIER */
 let multMap={
 bajaj:20,tata:18,kotak:22,abfl:20,idfc:18,hdfc:24,icici:22
 };
 
 let multiplierLoan = salary*(multMap[bank]||20);
+
+/* 🔒 LOAN CAPPING */
+if(bank==="bajaj" || bank==="tata" || bank==="abfl"){
+  if(emiLoan > 5000000) emiLoan = 5000000;
+  if(multiplierLoan > 5000000) multiplierLoan = 5000000;
+}
 
 if(eligibleEMI<=0){
 resultBox.innerHTML=`<div class="box">❌ Not Eligible</div>`;
@@ -197,7 +205,7 @@ EMI Based Loan<br>
 
 <div class="box">
 Multiplier Loan<br>
-<span class="highlight">₹ ${multiplierLoan.toLocaleString()}</span>
+<span class="highlight">₹ ${Math.round(multiplierLoan).toLocaleString()}</span>
 </div>
 
 <button class="apply" onclick="window.location.href='https://wa.me/918750370822'">
