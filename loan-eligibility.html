@@ -19,7 +19,6 @@ body{
   color:black;
 }
 
-/* HEADER */
 .header{
   display:flex;
   align-items:center;
@@ -44,7 +43,6 @@ body{
   color:#e0e7ff;
 }
 
-/* CARD */
 .container{
   padding:20px;
 }
@@ -78,7 +76,6 @@ button{
   color:black;
 }
 
-/* RESULT */
 .result{
   margin-top:20px;
 }
@@ -123,8 +120,8 @@ button{
 <div class="card">
 
 <input type="number" id="salary" placeholder="💰 Monthly Salary">
-<input type="number" id="emi" placeholder="💳 Existing EMI" value="0">
-<input type="number" id="cc" placeholder="💳 Credit Card Outstanding" value="0">
+<input type="number" id="emi" placeholder="💳 Existing EMI">
+<input type="number" id="cc" placeholder="💳 Credit Card Outstanding">
 
 <select id="hl">
 <option value="no">🏠 No Home Loan</option>
@@ -165,7 +162,6 @@ let bank = document.getElementById("bank").value;
 
 let foir = 0;
 
-/* FOIR */
 if(bank==="kotak"){
   foir = (hl==="yes" && house==="owned") ? 65 : 60;
 }else{
@@ -177,21 +173,17 @@ if(bank==="kotak"){
   if(hl==="yes" && house==="owned") foir+=5;
 }
 
-/* EMI */
 let eligibleEMI = (salary*foir/100) - emi - (cc*0.05);
 
-/* EMI Loan */
 let r=0.14/12, n=60;
 let emiLoan = (eligibleEMI*(Math.pow(1+r,n)-1))/(r*Math.pow(1+r,n));
 
-/* Multiplier */
 let multMap={
 bajaj:20,tata:18,kotak:22,abfl:20,idfc:18,hdfc:24,icici:22
 };
 
 let multiplierLoan = salary*(multMap[bank]||20);
 
-/* Approval % */
 let score = (foir*0.8) - (emi/1000);
 let status="bad", text="Low ❌";
 
@@ -203,12 +195,10 @@ resultBox.innerHTML=`<div class="box bad">❌ Not Eligible</div>`;
 return;
 }
 
-/* Best Bank */
 let best="HDFC";
 if(foir<60) best="Tata / Bajaj";
 if(hl==="yes") best="Kotak";
 
-/* OUTPUT */
 resultBox.innerHTML=`
 <div class="box"><b>FOIR:</b> ${foir}%</div>
 
